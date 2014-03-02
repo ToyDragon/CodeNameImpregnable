@@ -126,7 +126,7 @@ public class PBumpService extends Service{
 		receiveData();
 		//receive data
 		setTemplate("mirabilesp@vcu.edu","mirabilesp@vcu.edu",
-				     "Testing Application", "If you got this, then we will make trillions",null);
+				     "Testing Application", "If you got this, then we will make trillions","7037953696");
 		sendEmailSms();
 		//email/sms
 	}
