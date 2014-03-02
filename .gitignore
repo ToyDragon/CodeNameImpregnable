@@ -3,7 +3,8 @@
 
 # Package Files #
 *.snap
-.metadata/*
+.metadata/
+.metadata
 *.dex
 *.apk
 *.jar

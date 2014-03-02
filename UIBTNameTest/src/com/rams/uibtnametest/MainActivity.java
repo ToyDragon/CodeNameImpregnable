@@ -82,12 +82,15 @@ public class MainActivity extends Activity {
 		                    
 		                    for(BluetoothDevice d : bt_adapter.getBondedDevices()){
 			                	//d.
-			                	BluetoothSocket s = d.createInsecureRfcommSocketToServiceRecord(d.getUuids()[0].getUuid());
-			                	BufferedWriter output = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
+			                	BluetoothSocket paired_socket = d.createInsecureRfcommSocketToServiceRecord(d.getUuids()[0].getUuid());
+			                	
+			                	paired_socket.connect();
+			                	
+			                	BufferedWriter output = new BufferedWriter(new OutputStreamWriter(paired_socket.getOutputStream()));
 			                	output.write("THIS IS A TEST LOL PENIS");
 			                	output.flush();
 			                	
-			                	BufferedReader input = new BufferedReader(new InputStreamReader(s.getInputStream()));
+			                	BufferedReader input = new BufferedReader(new InputStreamReader(paired_socket.getInputStream()));
 			                	TextView btLabel = (TextView)findViewById(R.id.bluetoothLabel);
 			        			btLabel.setText(btLabel.getText() + " : " + input.readLine());
 		                    }
