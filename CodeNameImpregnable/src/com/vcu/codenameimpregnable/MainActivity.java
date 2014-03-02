@@ -39,8 +39,8 @@ public class MainActivity extends Activity {
 			for(BluetoothDevice device : bt_adapter.getBondedDevices()){
 				try {
 					if(device.getName().indexOf("PBump-")==0){
-						device.getClass().getMethod("removeBond", (Class[]) null).invoke(device, (Object[]) null);
-						Log.e("BTDevices","Unpaired!");
+						//device.getClass().getMethod("removeBond", (Class[]) null).invoke(device, (Object[]) null);
+						//Log.e("BTDevices","Unpaired!");
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
