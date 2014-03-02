@@ -1,7 +1,12 @@
 package com.vcu.codenameimpregnable;
 
+import java.lang.reflect.InvocationTargetException;
+
 import android.os.Bundle;
+import android.provider.Settings;
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
@@ -30,5 +35,19 @@ public class MainActivity extends Activity {
 		super.onPause();
 
 		stopService(pbump_service_intent);
+		
+		BluetoothAdapter bt_adapter = BluetoothAdapter.getDefaultAdapter();
+		if(bt_adapter!=null){
+			for(BluetoothDevice device : bt_adapter.getBondedDevices()){
+				try {
+					if(device.getName().indexOf("PBump-")==0){
+						device.getClass().getMethod("removeBond", (Class[]) null).invoke(device, (Object[]) null);
+						Log.e("BTDevices","Unpaired!");
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 }
