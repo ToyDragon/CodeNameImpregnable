@@ -23,5 +23,11 @@
             </intent-filter>
         </activity>
     </application>
+   	<uses-permission
+     android:name="android.permission.SEND_SMS"
+     android:maxSdkVersion="18" />
+    <uses-permission
+     android:name="android.permission.INTERNET"
+     android:maxSdkVersion="18" />
 
 </manifest>
