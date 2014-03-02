@@ -29,10 +29,14 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.getpebble.android.kit.PebbleKit;
+import com.getpebble.android.kit.PebbleKit.PebbleDataReceiver;
+
 public class MainActivity extends Activity {
 	
 	public static final String bump_prefix = "PBump-",trigger = "TRIGGERRR!!!!";
 	UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+	UUID pebble_uuid = UUID.fromString("b014bf50-a22b-11e3-a5e2-0800200c9a66");
 	String data_to_send = "Email:batesmatthewj@gmail.com,PhoneNumber:5409076417,Github:https://github.com/ToyDragon";
 	long last_time_sent, last_time_received;
 	BluetoothAdapter bt_adapter;
@@ -43,6 +47,15 @@ public class MainActivity extends Activity {
 	private String setSubject;
 	private String setText;
 	private String phoneNumber;
+	
+	PebbleDataReceiver receiver = new PebbleDataReceiver(pebble_uuid){
+		@Override 
+		public void receiveData(final Context context, final int transactionId, final PebbleDictionary data) {         
+
+			InputStream input = new ByteArrayInputStream( data.getBytes(45));
+
+		}
+	};
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
