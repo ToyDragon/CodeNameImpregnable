@@ -53,18 +53,22 @@ public class MainActivity extends Activity {
 	
 	LinkedList<Double> x_list = new LinkedList<Double>();
 	int records = 15;
-	
+	boolean last_thing;
 	PebbleDataReceiver pebble_receiver = new PebbleDataReceiver(pebble_uuid){
 		@Override 
 		public void receiveData(final Context context, final int transactionId, final PebbleDictionary data) {         
 			
 			boolean meets_condition = Boolean.parseBoolean(data.getString(43));
-			/*
-			boolean x = 
 			
+			Log.d("HELP",""+meets_condition);
+			if(meets_condition && last_time_sent <= System.currentTimeMillis() - 500 && !last_thing){
+				trigger();
+			}
+			
+			/*
 			//TODO READ DATA HERE
 			
-			double this_x = x;
+			this_x = x;
 			x_list.add(this_x);
 			if(x_list.size() >= records)
 				x_list.remove(0);
@@ -80,7 +84,7 @@ public class MainActivity extends Activity {
 			
 			meets_condition = (Math.abs(av_tot) > 10) && (Math.abs(recent) < 1);
 			
-			*/
+			
 			if(meets_condition && last_time_sent <= System.currentTimeMillis() - 500){
 				trigger();
 			}
@@ -89,7 +93,9 @@ public class MainActivity extends Activity {
 				Thread.sleep(100);
 			}catch(Exception e){
 				
-			}
+			}*/
+			
+			last_thing = meets_condition;
 		}
 	};
 	
