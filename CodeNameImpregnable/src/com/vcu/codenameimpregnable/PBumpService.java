@@ -112,14 +112,14 @@ public class PBumpService extends Service{
 				// check for trigger
 				while(!isStopped()){
 					
-
-					if (bt_adapter.isDiscovering())
-	                {
-	                	bt_adapter.cancelDiscovery();
-	                }
-					
-	                bt_adapter.startDiscovery();
-
+					if(bt_adapter!=null){
+						if (bt_adapter.isDiscovering())
+		                {
+		                	bt_adapter.cancelDiscovery();
+		                }
+						
+		                bt_adapter.startDiscovery();
+					}
 					//needs to be added to jenkin's code once we can determine which
 					//device is closes
 					/*
