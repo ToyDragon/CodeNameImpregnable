@@ -198,7 +198,6 @@ public class PBumpService extends Service{
 			SmsManager smsManager = SmsManager.getDefault();
 		
 			smsManager.sendTextMessage(phoneNumber, null, setText, null, null);
-			
 		}
 	}
 

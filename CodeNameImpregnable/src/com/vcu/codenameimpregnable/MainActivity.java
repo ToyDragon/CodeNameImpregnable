@@ -201,7 +201,6 @@ public class MainActivity extends Activity {
 	}
 	
 	public void onStop(){
-		
 		super.onStop();
 	}
 }
