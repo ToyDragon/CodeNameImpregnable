@@ -5,6 +5,7 @@
 *.snap
 .metadata/
 .metadata
+*.ap
 *.dex
 *.apk
 *.jar
