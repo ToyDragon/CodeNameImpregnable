@@ -49,7 +49,19 @@ public class PBumpService extends Service{
 	public void onCreate() {
 
 		Log.d("TEST","start");
-		if(!started){
+		
+	}
+	
+	public void onDestory(){
+		if(bt_listener!=null)
+			unregisterReceiver(bt_listener);
+	}
+
+	public int onHandleIntent(Intent intent, int flags, int startId) {
+
+		Log.d("TEST","starccccc "+started);
+	    
+	    if(!started){
 			started = true;
 			
 			//
@@ -74,19 +86,7 @@ public class PBumpService extends Service{
 						//email/sms
 			
 		}
-	}
-	
-	public void onDestory(){
-		if(bt_listener!=null)
-			unregisterReceiver(bt_listener);
-	}
-
-	@Override
-	public int onStartCommand(Intent intent, int flags, int startId) {
-
-		Log.d("TEST","starccccc "+started);
 	    return START_STICKY;
-
 	}
 	
 	public void makeDeviceDiscoverable(){
@@ -139,11 +139,8 @@ public class PBumpService extends Service{
 					}
 				}
 			}
-			
 		}).start();
 	}
-	
-	
 	 
 	private void listenForTriggerData() {
 		sendAllData();
@@ -256,13 +253,9 @@ public class PBumpService extends Service{
 	                        		Log.e("ERROR",""+e);
 	                        	}
 	            			}
-	            			
 	            		}
-	            		
 	            	}
-	            	
 	                Log.d("RSSI", name + " -> " + rssi);
-	                
 	            }
 		    }
 		};
@@ -298,6 +291,4 @@ public class PBumpService extends Service{
 		protected void onPostExecute(Long result){}
 		
 	}// end Class SendEmailTask
-
-	
 }// end Class PBumbServices
