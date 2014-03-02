@@ -76,13 +76,12 @@ public class PBumpService extends Service{
 						//receive data
 				
 						//email/sms
-			
 		}
 	}
 	
 	public void makeDeviceDiscoverable(){
 		Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-		discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 3500);
+		discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 1800);
 		discoverableIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		getApplication().startActivity(discoverableIntent);
 		Log.d("TEST","DISCOVERABLE");
@@ -92,7 +91,7 @@ public class PBumpService extends Service{
 		unregisterReceiver(bt_listener);
 		is_stopped = true;
 		super.onDestroy();
-		Log.d("TAG","DESTROYED");
+		Log.d("t","DESTROYED");
 	}
 	
 	public boolean isStopped(){
@@ -102,6 +101,8 @@ public class PBumpService extends Service{
 	private void lookAtDevices() {
 		new Thread(new Runnable() 
 		{
+			int passes = 0;
+
 			@Override
 			public void run() 
 			{
@@ -123,10 +124,12 @@ public class PBumpService extends Service{
 					
 							//email/sms
 					}
-					
 					try {
 						Thread.sleep(10000);
 						Log.d("TAG", "sleeping");
+						passes++;
+						if(passes >= 3)
+							is_stopped = true;
 					} catch (Exception e) {
 						Log.d("TAG", "ouch");
 					}
