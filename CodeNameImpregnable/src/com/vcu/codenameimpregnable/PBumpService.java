@@ -151,10 +151,10 @@ public class PBumpService extends Service{
 							//email/sms
 					}
 					try {
-						Thread.sleep(10000);
+						Thread.sleep(2000);
 						Log.d("TAG", "sleeping");
 						passes++;
-						if(passes >= 3) {
+						if(passes >= 50) {
 							is_stopped = true;
 							Log.d("t","LAD() has stopped looking");
 						}
