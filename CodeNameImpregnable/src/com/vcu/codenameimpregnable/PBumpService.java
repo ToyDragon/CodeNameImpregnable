@@ -78,17 +78,6 @@ public class PBumpService extends Service{
 		}
 	}
 	
-	public void onDestory(){
-		if(bt_listener!=null)
-			unregisterReceiver(bt_listener);
-	}
-
-	public int onHandleIntent(Intent intent, int flags, int startId) {
-
-	    return START_STICKY;
-		
-	}
-	
 	public void makeDeviceDiscoverable(){
 		Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
 		discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 3500);
@@ -98,7 +87,10 @@ public class PBumpService extends Service{
 	}
 	
 	public void onDestroy(){
+		unregisterReceiver(bt_listener);
 		is_stopped = true;
+		super.onDestroy();
+		Log.d("TAG","DESTROYED");
 	}
 	
 	public boolean isStopped(){
