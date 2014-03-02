@@ -31,6 +31,7 @@ public class MainActivity extends Activity {
 	
 	public static final String bump_prefix = "PBump-",trigger = "TRIGGERRR!!!!";
 	UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+	String data_to_send = "Email:batesmatthewj@gmail.com , Github:https://github.com/ToyDragon";
 	BluetoothAdapter bt_adapter;
 	BufferedWriter writer;
 	BufferedReader reader;
@@ -159,7 +160,11 @@ public class MainActivity extends Activity {
 						line = reader.readLine();
 						handleData(line);
 					} catch (IOException e) {
+						e.printStackTrace();
 						Log.e("ERROR","Could not receive data!");
+						try{
+							Thread.sleep(100);
+						}catch(Exception ee){}
 					}
 				}
 			}
