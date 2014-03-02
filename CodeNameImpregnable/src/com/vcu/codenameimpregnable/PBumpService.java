@@ -56,7 +56,8 @@ public class PBumpService extends Service{
 	    if(!started){
 			started = true;
 			bt_adapter = BluetoothAdapter.getDefaultAdapter();
-			bt_adapter.setName(bump_prefix + bt_adapter.getName());
+			if(bt_adapter.getName().indexOf(bump_prefix)!=0)
+				bt_adapter.setName(bump_prefix + bt_adapter.getName());
 			
 			//
 			makeDeviceDiscoverable();
