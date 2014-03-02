@@ -30,6 +30,7 @@ public class PBumpService extends Service{
 	String data_to_send;
 	String data_recieved;
 	String addTo,setFrom,setSubject,setText,phoneNumber;
+	boolean is_stopped;
 	
 	// CREATING FIELDS FOR BATES I MEAN TO SEND SHIT
 	
@@ -73,28 +74,37 @@ public class PBumpService extends Service{
 		}
 	    return START_STICKY;
 	}
+	
+	public void onDestroy(){
+		is_stopped = true;
+	}
+	
+	public boolean isStopped(){
+		return is_stopped;
+	}
 
 	private void lookAtDevices() {
 		new Thread(new Runnable() 
 		{
-
 			@Override
 			public void run() 
 			{
 				// check for trigger
-				if(isTriggerConditionMet()){
-					//send trigger data
-					sendTriggerData();
-
-					//listen for trigger data
-					listenForTriggerData();
-					//continued in listenForTriggerData
-
-						//send all data
-
-						//receive data
-				
-						//email/sms
+				while(!isStopped()){
+					if(isTriggerConditionMet()){
+						//send trigger data
+						sendTriggerData();
+	
+						//listen for trigger data
+						listenForTriggerData();
+						//continued in listenForTriggerData
+	
+							//send all data
+	
+							//receive data
+					
+							//email/sms
+					}
 				}
 			}
 			
