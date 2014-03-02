@@ -1,4 +1,5 @@
 package com.vcu.codenameimpregnable;
+//import com.example.pbump.R;
 import com.github.sendgrid.SendGrid;
 
 import java.io.BufferedReader;
@@ -18,19 +19,21 @@ import android.os.IBinder;
 import android.os.AsyncTask;
 import android.telephony.SmsManager;
 import android.util.Log;
+import android.widget.TextView;
 
 public class PBumpService extends Service{
 	
 	public static final String bump_prefix = "PBump-";
 	public BroadcastReceiver bt_listener;
 	
-	
+	BluetoothDevice closestDevice;
 	boolean started = false;
 	BluetoothAdapter bt_adapter;
 	String data_to_send;
 	String data_recieved;
 	String addTo,setFrom,setSubject,setText,phoneNumber;
 	boolean is_stopped;
+	int rssi = 0;
 	
 	// CREATING FIELDS FOR BATES I MEAN TO SEND SHIT
 	
@@ -91,6 +94,14 @@ public class PBumpService extends Service{
 			{
 				// check for trigger
 				while(!isStopped()){
+					
+					if (bt_adapter.isDiscovering())
+	                {
+	                	bt_adapter.cancelDiscovery();
+	                }
+					
+	                bt_adapter.startDiscovery();
+	                
 					if(isTriggerConditionMet()){
 						//send trigger data
 						sendTriggerData();
@@ -110,7 +121,38 @@ public class PBumpService extends Service{
 			
 		}).start();
 	}
-
+	
+	private final BroadcastReceiver receiver = new BroadcastReceiver()
+	 {
+	        @Override
+	        public void onReceive(Context context, Intent intent) 
+	        {
+	            String action = intent.getAction();
+	            if(BluetoothDevice.ACTION_FOUND.equals(action) && (intent.getStringExtra(BluetoothDevice.EXTRA_NAME) != null) && (intent.getStringExtra(BluetoothDevice.EXTRA_NAME).indexOf(bump_prefix)==0))
+	            {
+	                int temp;
+	            	temp = intent.getShortExtra(BluetoothDevice.EXTRA_RSSI,Short.MIN_VALUE);
+	            	String name = intent.getStringExtra(BluetoothDevice.EXTRA_NAME);
+	            	if (temp > rssi)
+	            	{
+	            		rssi = temp;
+	            		for(BluetoothDevice d : bt_adapter.getBondedDevices())
+	            		{
+	            			if (d.getName().equals(name))
+	            			{
+	            				closestDevice = d;
+	            			}
+	            			
+	            		}
+	            		
+	            	}
+	            	
+	                Log.d("RSSI", name + " -> " + rssi);
+	                
+	            }
+	        }
+	 };
+	 
 	private void listenForTriggerData() {
 		sendAllData();
 		//send all data
