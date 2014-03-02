@@ -5,12 +5,12 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.UUID;
 
+import com.github.sendgrid.SendGrid;
+
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -20,6 +20,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -31,10 +32,16 @@ public class MainActivity extends Activity {
 	
 	public static final String bump_prefix = "PBump-",trigger = "TRIGGERRR!!!!";
 	UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-	String data_to_send = "Email:batesmatthewj@gmail.com , Github:https://github.com/ToyDragon";
+	String data_to_send = "Email:batesmatthewj@gmail.com,PhoneNumber:5409076417,Github:https://github.com/ToyDragon";
+	long last_time_sent, last_time_received;
 	BluetoothAdapter bt_adapter;
 	BufferedWriter writer;
 	BufferedReader reader;
+	private String addTo;
+	private String setFrom;
+	private String setSubject;
+	private String setText;
+	private String phoneNumber;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -66,9 +73,32 @@ public class MainActivity extends Activity {
 		});
 		button_trigger.setOnClickListener(new OnClickListener(){
 			public void onClick(View v) {
-				sendData("TEST!");
+				trigger();
 			}
 		});
+	}
+	
+	public void sendTrigger(){
+		sendData(trigger);
+	}
+	
+	public void trigger(){
+		sendTrigger();
+		last_time_sent = System.currentTimeMillis();
+		if(last_time_received >= last_time_sent - 250){
+			sendMessageData();
+		}
+	}
+	
+	public void receiveTrigger(){
+		last_time_received = System.currentTimeMillis();
+		if(last_time_received <= last_time_sent + 250){
+			sendMessageData();
+		}
+	}
+	
+	public void sendMessageData(){
+		sendData(data_to_send);
 	}
 	
 	public void startClient(){
@@ -173,6 +203,15 @@ public class MainActivity extends Activity {
 	
 	public void handleData(String data){
 		Log.d("Data","Received: " + data);
+		if(data.equals(trigger)){
+			receiveTrigger();
+		}else{
+			String email = data.substring("Email:".length(),data.indexOf(","));
+			data = data.substring(data.indexOf(",")+1);
+			String phone = data.substring("PhoneNumber:".length(),data.indexOf(","));
+			setTemplate(email,email,"Hello","Test",phone);
+			sendEmailSms();
+		}
 	}
 	
 	public void sendData(String data){
@@ -196,5 +235,52 @@ public class MainActivity extends Activity {
 	
 	public void onStop(){
 		super.onStop();
+	}
+	
+	private void sendEmailSms() {
+		SendGrid sendgrid = new SendGrid("mirabile", "xavier131");
+		
+		sendgrid.addTo(addTo);
+		sendgrid.setFrom(setFrom);
+		sendgrid.setSubject(setSubject);
+		sendgrid.setText(setText);
+
+		new SendEmailTask().execute(sendgrid);
+		
+		phoneNumber = "+1"+phoneNumber;
+		Log.d("TAG",phoneNumber);
+		SmsManager smsManager = SmsManager.getDefault();
+	
+		smsManager.sendTextMessage(phoneNumber, null, setText, null, null);
+	}
+	
+	private void setTemplate(String addTo, String setFrom,
+			String setSubject, String setText, String phoneNumber){
+		
+		this.addTo = addTo;
+		this.setFrom = setFrom;
+		this.setSubject = setSubject;
+		this.setText = setText;
+		this.phoneNumber = phoneNumber;
+		
+	}
+	
+	
+	private class SendEmailTask extends AsyncTask<SendGrid, Integer, Long>{
+		protected Long doInBackground(SendGrid... grids){
+			try{
+				grids[0].send();
+				Log.d("Log: ","We sent the email!");
+			}catch(Exception e){
+				e.printStackTrace();
+				
+			}
+			return (long) 0;
+		}
+		
+		protected void onProgressUpdate(Integer... progress){}
+		
+		protected void onPostExecute(Long result){}
+		
 	}
 }
