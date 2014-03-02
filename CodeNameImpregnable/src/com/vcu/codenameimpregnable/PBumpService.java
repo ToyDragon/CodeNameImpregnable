@@ -1,12 +1,16 @@
 package com.vcu.codenameimpregnable;
 
 import android.app.Service;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.IBinder;
 
 public class PBumpService extends Service{
 
 	boolean started = false;
+	BluetoothAdapter bt_adapter;
+	String data_to_send;
+	String data_recieved;
 	
 	@Override
 	public IBinder onBind(Intent arg0) {
