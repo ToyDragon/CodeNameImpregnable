@@ -26,7 +26,7 @@ public class PBumpService extends Service{
 	
 	BluetoothDevice closestDevice;
 
-	boolean started = false;
+	boolean started;
 	BluetoothAdapter bt_adapter;
 	String data_to_send;
 	String data_recieved;
@@ -44,15 +44,25 @@ public class PBumpService extends Service{
 	}
 	
 	@Override
-	public void onStart(Intent intent, int startId) {
-		
+	public void onCreate() {
+
+		Log.d("TEST","start");
+	}
+	
+	public void onDestory(){
+		if(bt_listener!=null)
+			unregisterReceiver(bt_listener);
 	}
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		
+
+		Log.d("TEST","starccccc "+started);
 		if(!started){
 			started = true;
+			
+			//
+			makeDeviceDiscoverable();
 			
 			//start listening
 			startListening();
@@ -74,6 +84,14 @@ public class PBumpService extends Service{
 			
 		}
 	    return START_STICKY;
+	}
+	
+	public void makeDeviceDiscoverable(){
+		Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+		discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 3500);
+		discoverableIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		getApplication().startActivity(discoverableIntent);
+		Log.d("TEST","DISCOVERABLE");
 	}
 	
 	public void onDestroy(){

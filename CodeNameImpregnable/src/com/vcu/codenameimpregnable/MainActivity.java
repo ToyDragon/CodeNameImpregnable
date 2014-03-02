@@ -3,6 +3,7 @@ package com.vcu.codenameimpregnable;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.Menu;
 
 public class MainActivity extends Activity {
@@ -13,7 +14,8 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		pbump_service_intent = new Intent(this, PBumpService.class);
 		setContentView(R.layout.activity_main);
-		
+
+		Log.d("TEST","starting service");
 		startService(pbump_service_intent);
 	}
 
