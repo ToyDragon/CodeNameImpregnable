@@ -106,16 +106,8 @@ public class PBumpService extends Service{
 			public void run() 
 			{
 				// check for trigger
+                bt_adapter.startDiscovery();
 				while(!isStopped()){
-					
-					if(bt_adapter!=null){
-						if (bt_adapter.isDiscovering())
-		                {
-		                	bt_adapter.cancelDiscovery();
-		                }
-						
-		                bt_adapter.startDiscovery();
-					}
 
 					if(isTriggerConditionMet()){
 						//send trigger data
