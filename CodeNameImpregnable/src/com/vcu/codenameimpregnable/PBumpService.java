@@ -6,6 +6,7 @@ import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Method;
+
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -32,10 +33,9 @@ public class PBumpService extends Service{
 	String addTo,setFrom,setSubject,setText,phoneNumber;
 	boolean is_stopped;
 	
-	// CREATING FIELDS FOR BATES I MEAN TO SEND SHIT
-	
-	
-	
+	static BluetoothSocket bt_socket;
+	static BufferedWriter bt_writer;
+	static BufferedReader bt_reader;
 	
 	@Override
 	public IBinder onBind(Intent arg0) {
@@ -104,6 +104,25 @@ public class PBumpService extends Service{
 							//receive data
 					
 							//email/sms
+					}
+					
+					if(bt_socket!=null){
+						try{
+							bt_writer.write("TEST1");
+							bt_writer.newLine();
+							bt_writer.flush();
+						}catch(Exception e){
+							Log.d("ERROR",e.toString());
+						}
+					}
+					
+					if(bt_socket!=null){
+						try{
+							data_recieved = bt_reader.readLine();
+							Log.d("Test",data_recieved);
+						}catch(Exception e){
+							Log.d("ERROR",e.toString());
+						}
 					}
 				}
 			}
@@ -189,18 +208,11 @@ public class PBumpService extends Service{
 		                    bool = (Boolean) method.invoke(device);
 		                    
 		                    for(BluetoothDevice d : bt_adapter.getBondedDevices()){
-			                	//d.
-			                	BluetoothSocket paired_socket = d.createInsecureRfcommSocketToServiceRecord(d.getUuids()[0].getUuid());
 			                	
-			                	paired_socket.connect();
-			                	
-			                	BufferedWriter output = new BufferedWriter(new OutputStreamWriter(paired_socket.getOutputStream()));
-			                	output.write("THIS IS A TEST LOL PENIS");
-			                	output.flush();
-			                	
-			                	BufferedReader input = new BufferedReader(new InputStreamReader(paired_socket.getInputStream()));
-			                	//TextView btLabel = (TextView)findViewById(R.id.bluetoothLabel);
-			        			//btLabel.setText(btLabel.getText() + " : " + input.readLine());
+		                    	bt_socket = d.createInsecureRfcommSocketToServiceRecord(d.getUuids()[0].getUuid());
+			                	bt_reader = new BufferedReader(new InputStreamReader(bt_socket.getInputStream()));
+			                	bt_writer = new BufferedWriter(new OutputStreamWriter(bt_socket.getOutputStream()));
+		                    	
 		                    }
 		                } catch (Exception e) {
 		                    Log.i("Log", "Inside catch of serviceFromDevice Method");
