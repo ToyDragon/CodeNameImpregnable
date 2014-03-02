@@ -74,40 +74,28 @@ public class MainActivity extends Activity {
 		BroadcastReceiver bt_listener = new BroadcastReceiver() {
 			public void onReceive(Context context, Intent intent) {
 		        String action = intent.getAction();
-		        // When discovery finds a device
 		        if (BluetoothDevice.ACTION_FOUND.equals(action) && writer==null) {
-		            // Get the BluetoothDevice object from the Intent
 		            BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 		            Log.i("Log", "Viewing device "+device.getName() + " : " + device.getBondState());
-					// Add the name and address to an array adapter to show in a ListView
 		            if(device.getName().indexOf(bump_prefix) == 0){
 		                Log.i("Log", "Accepted!");
-		                try {
-		                    Method method = BluetoothDevice.class.getMethod("createBond", new Class[0]);
-		                    method.invoke(device);
-		                    try{
-	                        	//BluetoothSocket socket = device.createInsecureRfcommSocketToServiceRecord(uuid);
-	                        	Method m = device.getClass().getMethod("createRfcommSocket", new Class[] {int.class});
-	                        	BluetoothSocket socket = (BluetoothSocket) m.invoke(device, 1);
-	                        	
-	                        	bt_adapter.cancelDiscovery();
-	                        	
-	                        	socket.connect();
-	                        	
-	                        	writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-	        					reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-	        					
-	        					connectionEstablished();
-	        		            Log.i("Log", "Connected succesfully!"+(writer!=null));
-                        	}catch(Exception e){
-                        		Log.e("ERROR","COULD NOT BE A CLIENT NOOOOOOO!!!!!!");
-                        		e.printStackTrace();
-                        		Log.e("ERROR",""+e.getMessage());
-                        	}
-		                } catch (Exception e) {
-		                    Log.i("Log", "Inside catch of serviceFromDevice Method");
-		                    e.printStackTrace();
-		                }
+	                    try{
+                        	BluetoothSocket socket = device.createInsecureRfcommSocketToServiceRecord(uuid);
+                        	
+                        	bt_adapter.cancelDiscovery();
+                        	
+                        	socket.connect();
+                        	
+                        	writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+        					reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        					
+        					connectionEstablished();
+        		            Log.i("Log", "Connected succesfully!"+(writer!=null));
+                    	}catch(Exception e){
+                    		Log.e("ERROR","COULD NOT BE A CLIENT NOOOOOOO!!!!!!");
+                    		e.printStackTrace();
+                    		Log.e("ERROR",""+e.getMessage());
+                    	}
 			        }
 		        }
 		        if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action) && writer == null){
@@ -142,7 +130,7 @@ public class MainActivity extends Activity {
 					
 					BluetoothServerSocket server_socket = bt_adapter.listenUsingRfcommWithServiceRecord(bt_adapter.getName(), uuid);
 					BluetoothSocket socket = server_socket.accept();
-					socket.connect();
+					
 					writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 					reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 					
@@ -150,6 +138,7 @@ public class MainActivity extends Activity {
 			        Log.i("Log", "Connection established");
 					
 				}catch(Exception e){
+					e.printStackTrace();
 					Log.e("ERROR","COULD NOT BE A SERVER NOOOOOO!!!!");
 				}
 			}
