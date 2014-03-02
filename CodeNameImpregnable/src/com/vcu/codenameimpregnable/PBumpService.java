@@ -20,8 +20,8 @@ import android.widget.TextView;
 
 public class PBumpService extends Service{
 	
-	public static final String bump_prefix = "PBump-";
-	public BroadcastReceiver bt_listener;
+	private static final String bump_prefix = "PBump-";
+	private BroadcastReceiver bt_listener;
 
 	boolean started = false;
 	BluetoothAdapter bt_adapter;
@@ -132,23 +132,22 @@ public class PBumpService extends Service{
 	private void startListening() {
 		final BluetoothAdapter bt_adapter = BluetoothAdapter.getDefaultAdapter();
 		bt_listener = new BroadcastReceiver() {
-		    public void onReceive(Context context, Intent intent) {
+		    
+			public void onReceive(Context context, Intent intent) {
 		        String action = intent.getAction();
 		        // When discovery finds a device
 		        if (BluetoothDevice.ACTION_FOUND.equals(action)) {
 		            // Get the BluetoothDevice object from the Intent
 		            BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 					// Add the name and address to an array adapter to show in a ListView
-		            if(device.getName().indexOf(bump_prefix)==0&&device.getBondState() == BluetoothDevice.BOND_NONE){
+		            if(device.getName().indexOf(bump_prefix) == 0 && device.getBondState() == BluetoothDevice.BOND_NONE){
 			            //device.bond or whatever
-		            	Boolean bool = false;
 		                try {
 		                    Log.i("Log", "service method is called ");
 		                    Class cl = Class.forName("android.bluetooth.BluetoothDevice");
 		                    Class[] par = {};
 		                    Method method = cl.getMethod("createBond", par);
-		                    Object[] args = {};
-		                    bool = (Boolean) method.invoke(device);
+		                    method.invoke(device);
 		                    
 		                    for(BluetoothDevice d : bt_adapter.getBondedDevices()){
 			                	//d.
@@ -183,7 +182,5 @@ public class PBumpService extends Service{
 		registerReceiver(bt_listener, filter);
 		
 		bt_adapter.startDiscovery();
-		
 	}
-	
 }
