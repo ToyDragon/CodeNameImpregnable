@@ -128,8 +128,10 @@ public class PBumpService extends Service{
 						Thread.sleep(10000);
 						Log.d("TAG", "sleeping");
 						passes++;
-						if(passes >= 3)
+						if(passes >= 3) {
 							is_stopped = true;
+							Log.d("t","LAD() has stopped looking");
+						}
 					} catch (Exception e) {
 						Log.d("TAG", "ouch");
 					}
