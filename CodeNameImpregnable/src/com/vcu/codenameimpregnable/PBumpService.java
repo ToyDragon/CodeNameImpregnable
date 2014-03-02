@@ -175,6 +175,7 @@ public class PBumpService extends Service{
 	private void receiveData() {
 		try{
 			data_recieved = bt_reader.readLine();
+			Log.d("DATA","Received: " + data_recieved);
 		}catch(Exception e){
 			
 		}
@@ -185,6 +186,7 @@ public class PBumpService extends Service{
 			bt_writer.write(data_to_send);
 			bt_writer.newLine();
 			bt_writer.flush();
+			Log.d("DATA","Send: " + data_to_send);
 		}catch(Exception e){
 			Log.d("PBump Error","Could not write to socket!\n"+e.toString());
 		}
