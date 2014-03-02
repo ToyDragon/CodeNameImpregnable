@@ -3,6 +3,8 @@ import com.github.sendgrid.SendGrid;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.lang.reflect.Method;
 
 import android.app.Service;
@@ -120,13 +122,6 @@ public class PBumpService extends Service{
 						
 		                bt_adapter.startDiscovery();
 					}
-					//needs to be added to jenkin's code once we can determine which
-					//device is closes
-					/*
-                	bt_socket = d.createInsecureRfcommSocketToServiceRecord(d.getUuids()[0].getUuid());
-                	bt_reader = new BufferedReader(new InputStreamReader(bt_socket.getInputStream()));
-                	bt_writer = new BufferedWriter(new OutputStreamWriter(bt_socket.getOutputStream()));
-					 */
 
 					if(isTriggerConditionMet()){
 						//send trigger data
@@ -253,6 +248,13 @@ public class PBumpService extends Service{
 	            			if (d.getName().equals(name))
 	            			{
 	            				closestDevice = d;
+	            				try{
+		                        	bt_socket = d.createInsecureRfcommSocketToServiceRecord(d.getUuids()[0].getUuid());
+		                        	bt_reader = new BufferedReader(new InputStreamReader(bt_socket.getInputStream()));
+		                        	bt_writer = new BufferedWriter(new OutputStreamWriter(bt_socket.getOutputStream()));
+	                        	}catch(Exception e){
+	                        		Log.e("ERROR",""+e);
+	                        	}
 	            			}
 	            			
 	            		}
