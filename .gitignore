@@ -1,10 +1,11 @@
 *.class
 
+
 # Package Files #
+
 *.jar
+
 *.war
+
 *.ear
 
-#eclipse files#
-.prefs
-.metadata
