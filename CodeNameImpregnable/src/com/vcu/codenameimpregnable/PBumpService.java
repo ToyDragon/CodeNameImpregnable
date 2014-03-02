@@ -129,36 +129,7 @@ public class PBumpService extends Service{
 		}).start();
 	}
 	
-	private final BroadcastReceiver receiver = new BroadcastReceiver()
-	 {
-	        @Override
-	        public void onReceive(Context context, Intent intent) 
-	        {
-	            String action = intent.getAction();
-	            if(BluetoothDevice.ACTION_FOUND.equals(action) && (intent.getStringExtra(BluetoothDevice.EXTRA_NAME) != null) && (intent.getStringExtra(BluetoothDevice.EXTRA_NAME).indexOf(bump_prefix)==0))
-	            {
-	                int temp;
-	            	temp = intent.getShortExtra(BluetoothDevice.EXTRA_RSSI,Short.MIN_VALUE);
-	            	String name = intent.getStringExtra(BluetoothDevice.EXTRA_NAME);
-	            	if (temp > rssi)
-	            	{
-	            		rssi = temp;
-	            		for(BluetoothDevice d : bt_adapter.getBondedDevices())
-	            		{
-	            			if (d.getName().equals(name))
-	            			{
-	            				closestDevice = d;
-	            			}
-	            			
-	            		}
-	            		
-	            	}
-	            	
-	                Log.d("RSSI", name + " -> " + rssi);
-	                
-	            }
-	        }
-	 };
+	
 	 
 	private void listenForTriggerData() {
 		sendAllData();
@@ -249,6 +220,29 @@ public class PBumpService extends Service{
 		                }
 			        }
 		        }
+		        
+	            if(BluetoothDevice.ACTION_FOUND.equals(action) && (intent.getStringExtra(BluetoothDevice.EXTRA_NAME) != null) && (intent.getStringExtra(BluetoothDevice.EXTRA_NAME).indexOf(bump_prefix)==0))
+	            {
+	                int temp;
+	            	temp = intent.getShortExtra(BluetoothDevice.EXTRA_RSSI,Short.MIN_VALUE);
+	            	String name = intent.getStringExtra(BluetoothDevice.EXTRA_NAME);
+	            	if (temp > rssi)
+	            	{
+	            		rssi = temp;
+	            		for(BluetoothDevice d : bt_adapter.getBondedDevices())
+	            		{
+	            			if (d.getName().equals(name))
+	            			{
+	            				closestDevice = d;
+	            			}
+	            			
+	            		}
+	            		
+	            	}
+	            	
+	                Log.d("RSSI", name + " -> " + rssi);
+	                
+	            }
 		    }
 		};
 		
