@@ -7,10 +7,11 @@ import android.view.Menu;
 
 public class MainActivity extends Activity {
 
-	Intent pbump_service_intent = new Intent(this, PBumpService.class);
+	Intent pbump_service_intent;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		pbump_service_intent = new Intent(this, PBumpService.class);
 		setContentView(R.layout.activity_main);
 		
 		startService(pbump_service_intent);
