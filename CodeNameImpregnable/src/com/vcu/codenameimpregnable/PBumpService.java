@@ -22,7 +22,6 @@ import android.util.Log;
 
 public class PBumpService extends Service{
 	
-
 	public static final String bump_prefix = "PBump-";
 	public BroadcastReceiver bt_listener;
 	
