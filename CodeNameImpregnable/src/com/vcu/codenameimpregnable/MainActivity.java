@@ -33,8 +33,6 @@ public class MainActivity extends Activity {
 
 	public void onPause(){
 		super.onPause();
-
-		stopService(pbump_service_intent);
 		
 		BluetoothAdapter bt_adapter = BluetoothAdapter.getDefaultAdapter();
 		if(bt_adapter!=null){
@@ -52,5 +50,10 @@ public class MainActivity extends Activity {
 		if(bt_adapter.getName().indexOf("PBump-")==0){
 			bt_adapter.setName(bt_adapter.getName().substring("PBump-".length()));
 		}
+	}
+	
+	public void onDestroy(){
+		stopService(pbump_service_intent);
+		super.onDestroy();
 	}
 }
