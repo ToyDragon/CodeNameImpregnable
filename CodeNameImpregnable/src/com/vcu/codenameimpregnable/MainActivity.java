@@ -58,9 +58,9 @@ public class MainActivity extends Activity {
 		@Override 
 		public void receiveData(final Context context, final int transactionId, final PebbleDictionary data) {         
 			
-			boolean meets_condition = false;
-			
-			double x = Double.parseDouble(data.getString(43));
+			boolean meets_condition = Boolean.parseBoolean(data.getString(43));
+			/*
+			boolean x = 
 			
 			//TODO READ DATA HERE
 			
@@ -80,7 +80,7 @@ public class MainActivity extends Activity {
 			
 			meets_condition = (Math.abs(av_tot) > 10) && (Math.abs(recent) < 1);
 			
-			
+			*/
 			if(meets_condition && last_time_sent <= System.currentTimeMillis() - 500){
 				trigger();
 			}
