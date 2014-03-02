@@ -156,13 +156,21 @@ public class PBumpService extends Service{
 	}
 
 	private void receiveData() {
-		// TODO Auto-generated method stub
-		
+		try{
+			data_recieved = bt_reader.readLine();
+		}catch(Exception e){
+			
+		}
 	}
 
 	private void sendAllData() {
-		// TODO Auto-generated method stub
-		
+		try{
+			bt_writer.write(data_to_send);
+			bt_writer.newLine();
+			bt_writer.flush();
+		}catch(Exception e){
+			Log.d("PBump Error","Could not write to socket!\n"+e.toString());
+		}
 	}
 
 	private void sendTriggerData() {
@@ -171,7 +179,7 @@ public class PBumpService extends Service{
 	}
 
 	private boolean isTriggerConditionMet() {
-		// TODO Auto-generated method stub
+		
 		return false;
 	}
 
@@ -229,13 +237,9 @@ public class PBumpService extends Service{
 			return (long) 0;
 		}
 		
-		protected void onProgressUpdate(Integer... progress){
-			//setProgressPercent(progress[0]);
-		}
+		protected void onProgressUpdate(Integer... progress){}
 		
-		protected void onPostExecute(Long result){
-			//
-		}
+		protected void onPostExecute(Long result){}
 		
 	}// end Class SendEmailTask
 
