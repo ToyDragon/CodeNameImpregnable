@@ -198,7 +198,7 @@ public class PBumpService extends Service{
 
 	private boolean isTriggerConditionMet() {
 		
-		return false;
+		return bt_writer != null;
 	}
 
 	private void startListening() {
@@ -223,13 +223,23 @@ public class PBumpService extends Service{
 		                    Class[] par = {};
 		                    Method method = cl.getMethod("createBond", par);
 		                    method.invoke(device);
+		                    
+		                    try{
+	                        	bt_socket = device.createInsecureRfcommSocketToServiceRecord(device.getUuids()[0].getUuid());
+	                        	bt_socket.connect();
+	                        	bt_reader = new BufferedReader(new InputStreamReader(bt_socket.getInputStream()));
+	                        	bt_writer = new BufferedWriter(new OutputStreamWriter(bt_socket.getOutputStream()));
+	        		            Log.i("Log", "socket set with "+device.getName());
+                        	}catch(Exception e){
+                        		Log.e("ERROR",""+e);
+                        	}
 		                } catch (Exception e) {
 		                    Log.i("Log", "Inside catch of serviceFromDevice Method");
 		                    e.printStackTrace();
 		                }
 			        }
 		        }
-		        
+		        /*
 	            if(BluetoothDevice.ACTION_FOUND.equals(action) && (intent.getStringExtra(BluetoothDevice.EXTRA_NAME) != null) && (intent.getStringExtra(BluetoothDevice.EXTRA_NAME).indexOf(bump_prefix)==0))
 	            {
 	                int temp;
@@ -243,18 +253,13 @@ public class PBumpService extends Service{
 	            			if (d.getName().equals(name))
 	            			{
 	            				closestDevice = d;
-	            				try{
-		                        	bt_socket = d.createInsecureRfcommSocketToServiceRecord(d.getUuids()[0].getUuid());
-		                        	bt_reader = new BufferedReader(new InputStreamReader(bt_socket.getInputStream()));
-		                        	bt_writer = new BufferedWriter(new OutputStreamWriter(bt_socket.getOutputStream()));
-	                        	}catch(Exception e){
-	                        		Log.e("ERROR",""+e);
-	                        	}
+	            				
 	            			}
 	            		}
 	            	}
 	                Log.d("RSSI", name + " -> " + rssi);
 	            }
+	            */
 		    }
 		};
 		
