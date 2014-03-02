@@ -54,6 +54,9 @@ public class PBumpService extends Service{
 	    if(!started){
 			started = true;
 			
+			if(bt_adapter!=null && bt_adapter.getName().indexOf(bump_prefix)!=0)
+				bt_adapter.setName(bump_prefix + bt_adapter.getName());
+			
 			//
 			makeDeviceDiscoverable();
 			
@@ -206,14 +209,15 @@ public class PBumpService extends Service{
 		    
 			public void onReceive(Context context, Intent intent) {
 		        String action = intent.getAction();
-                Log.i("Log", "Intent " + action);
+		        Log.i("Log", "test1 ");
 		        // When discovery finds a device
 		        if (BluetoothDevice.ACTION_FOUND.equals(action)) {
 		            // Get the BluetoothDevice object from the Intent
-                    Log.i("Log", "blue tooothhhhh !");
 		            BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+		            Log.i("Log", "test2 "+device.getName() + " : " + device.getBondState());
 					// Add the name and address to an array adapter to show in a ListView
-		            if(device.getName().indexOf(bump_prefix) == 0 && device.getBondState() == BluetoothDevice.BOND_NONE){
+		            if(device.getName().indexOf(bump_prefix) == 0){// && device.getBondState() == BluetoothDevice.BOND_NONE){
+		                Log.i("Log", "test3 ");
 			            //device.bond or whatever
 		                try {
 		                    Log.i("Log", "service method is called ");
