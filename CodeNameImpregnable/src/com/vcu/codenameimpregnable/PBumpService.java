@@ -90,6 +90,15 @@ public class PBumpService extends Service{
 			{
 				// check for trigger
 				while(!isStopped()){
+					
+					//needs to be added to jenkin's code once we can determine which
+					//device is closes
+					/*
+                	bt_socket = d.createInsecureRfcommSocketToServiceRecord(d.getUuids()[0].getUuid());
+                	bt_reader = new BufferedReader(new InputStreamReader(bt_socket.getInputStream()));
+                	bt_writer = new BufferedWriter(new OutputStreamWriter(bt_socket.getOutputStream()));
+					 */
+					
 					if(isTriggerConditionMet()){
 						//send trigger data
 						sendTriggerData();
@@ -103,25 +112,6 @@ public class PBumpService extends Service{
 							//receive data
 					
 							//email/sms
-					}
-					
-					if(bt_socket!=null){
-						try{
-							bt_writer.write("TEST1");
-							bt_writer.newLine();
-							bt_writer.flush();
-						}catch(Exception e){
-							Log.d("ERROR",e.toString());
-						}
-					}
-					
-					if(bt_socket!=null){
-						try{
-							data_recieved = bt_reader.readLine();
-							Log.d("Test",data_recieved);
-						}catch(Exception e){
-							Log.d("ERROR",e.toString());
-						}
 					}
 				}
 			}
@@ -204,24 +194,10 @@ public class PBumpService extends Service{
 		                    Class[] par = {};
 		                    Method method = cl.getMethod("createBond", par);
 		                    method.invoke(device);
-		                    
-		                    for(BluetoothDevice d : bt_adapter.getBondedDevices()){
-			                	
-		                    	bt_socket = d.createInsecureRfcommSocketToServiceRecord(d.getUuids()[0].getUuid());
-			                	bt_reader = new BufferedReader(new InputStreamReader(bt_socket.getInputStream()));
-			                	bt_writer = new BufferedWriter(new OutputStreamWriter(bt_socket.getOutputStream()));
-		                    	
-		                    }
 		                } catch (Exception e) {
 		                    Log.i("Log", "Inside catch of serviceFromDevice Method");
 		                    e.printStackTrace();
-		                }		            	
-		            	
-						//TextView bt_devices = (TextView)findViewById(R.id.bluetoothDevices);
-						/*bt_devices.setText(bt_devices.getText() + "\n" + device.getName()
-								+ "\n  " + device.getAddress()
-								+ "\n  " + device.getBondState()
-								+ "\n  " + BluetoothDevice.BOND_NONE);*/
+		                }
 			        }
 		        }
 		    }
