@@ -1,11 +1,17 @@
 package com.rams.uibtnametest;
 
-import java.io.IOException;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.lang.reflect.Method;
 
 import android.os.Bundle;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothClass.Device;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
@@ -72,13 +78,25 @@ public class MainActivity extends Activity {
 		                    Class[] par = {};
 		                    Method method = cl.getMethod("createBond", par);
 		                    Object[] args = {};
-		                    bool = (Boolean) method.invoke(device);//, args);// this invoke creates the detected devices paired.
-		                    //Log.i("Log", "This is: "+bool.booleanValue());
-		                    //Log.i("Log", "devicesss: "+bdDevice.getName());
+		                    bool = (Boolean) method.invoke(device);
+		                    
+		                    for(BluetoothDevice d : bt_adapter.getBondedDevices()){
+			                	//d.
+			                	BluetoothSocket s = d.createInsecureRfcommSocketToServiceRecord(d.getUuids()[0].getUuid());
+			                	BufferedWriter output = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
+			                	output.write("THIS IS A TEST LOL PENIS");
+			                	output.flush();
+			                	
+			                	BufferedReader input = new BufferedReader(new InputStreamReader(s.getInputStream()));
+			                	TextView btLabel = (TextView)findViewById(R.id.bluetoothLabel);
+			        			btLabel.setText(btLabel.getText() + " : " + input.readLine());
+		                    }
 		                } catch (Exception e) {
 		                    Log.i("Log", "Inside catch of serviceFromDevice Method");
 		                    e.printStackTrace();
 		                }
+		                
+		                
 		            	
 		            	
 						TextView bt_devices = (TextView)findViewById(R.id.bluetoothDevices);
