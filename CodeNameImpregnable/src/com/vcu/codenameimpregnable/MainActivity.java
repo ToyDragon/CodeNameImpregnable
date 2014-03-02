@@ -49,5 +49,8 @@ public class MainActivity extends Activity {
 				}
 			}
 		}
+		if(bt_adapter.getName().indexOf("PBump-")==0){
+			bt_adapter.setName(bt_adapter.getName().substring("PBump-".length()));
+		}
 	}
 }
