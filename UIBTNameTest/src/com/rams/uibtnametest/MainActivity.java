@@ -1,19 +1,15 @@
 package com.rams.uibtnametest;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.lang.reflect.Method;
 
 import android.os.Bundle;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothClass.Device;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -24,8 +20,10 @@ import android.view.Menu;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
+	
 	public static final String bump_prefix = "PBump-";
 	public BroadcastReceiver bt_listener;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -53,7 +51,6 @@ public class MainActivity extends Activity {
 	}
 	
 	public void makeDeviceDiscoverable(){
-
 		Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
 		discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 3500);
 		startActivity(discoverableIntent);
@@ -62,6 +59,7 @@ public class MainActivity extends Activity {
 	public void listenForDevices(){
 		final BluetoothAdapter bt_adapter = BluetoothAdapter.getDefaultAdapter();
 		bt_listener = new BroadcastReceiver() {
+			
 		    public void onReceive(Context context, Intent intent) {
 		        String action = intent.getAction();
 		        // When discovery finds a device
@@ -71,14 +69,12 @@ public class MainActivity extends Activity {
 					// Add the name and address to an array adapter to show in a ListView
 		            if(device.getName().indexOf(bump_prefix)==0&&device.getBondState() == BluetoothDevice.BOND_NONE){
 			            //device.bond or whatever
-		            	Boolean bool = false;
 		                try {
 		                    Log.i("Log", "service method is called ");
 		                    Class cl = Class.forName("android.bluetooth.BluetoothDevice");
 		                    Class[] par = {};
 		                    Method method = cl.getMethod("createBond", par);
-		                    Object[] args = {};
-		                    bool = (Boolean) method.invoke(device);
+		                    method.invoke(device);
 		                    
 		                    for(BluetoothDevice d : bt_adapter.getBondedDevices()){
 			                	//d.
@@ -91,16 +87,13 @@ public class MainActivity extends Activity {
 			                	output.flush();
 			                	
 			                	BufferedReader input = new BufferedReader(new InputStreamReader(paired_socket.getInputStream()));
-			                	TextView btLabel = (TextView)findViewById(R.id.bluetoothLabel);
-			        			btLabel.setText(btLabel.getText() + " : " + input.readLine());
+			                	//TextView btLabel = (TextView)findViewById(R.id.bluetoothLabel);
+			        			//btLabel.setText(btLabel.getText() + " : " + input.readLine());
 		                    }
 		                } catch (Exception e) {
 		                    Log.i("Log", "Inside catch of serviceFromDevice Method");
 		                    e.printStackTrace();
 		                }
-		                
-		                
-		            	
 		            	
 						TextView bt_devices = (TextView)findViewById(R.id.bluetoothDevices);
 						bt_devices.setText(bt_devices.getText() + "\n" + device.getName()
