@@ -1,15 +1,11 @@
 package com.vcu.codenameimpregnable;
-<<<<<<< HEAD
 import com.github.sendgrid.SendGrid;
-=======
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Method;
-
->>>>>>> e6abf321974afc83dcbb151637a6e8823a62207e
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -19,22 +15,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
-<<<<<<< HEAD
-import android.app.Activity;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.util.Log;
-import android.view.Menu;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
-=======
-import android.util.Log;
-import android.widget.TextView;
->>>>>>> e6abf321974afc83dcbb151637a6e8823a62207e
 
 public class PBumpService extends Service{
 	
