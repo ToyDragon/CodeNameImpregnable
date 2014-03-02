@@ -32,7 +32,7 @@ public class PBumpService extends Service{
 
 	boolean started;
 	BluetoothAdapter bt_adapter;
-	String data_to_send;
+	String data_to_send = "LOL PENIS GAYYYYY";
 	String data_recieved;
 	String addTo,setFrom,setSubject,setText,phoneNumber;
 	boolean is_stopped;
@@ -152,7 +152,7 @@ public class PBumpService extends Service{
 							//email/sms
 					}
 					try {
-						Thread.sleep(2000);
+						Thread.sleep(10000);
 						Log.d("TAG", "sleeping");
 						passes++;
 						if(passes >= 50) {
@@ -208,7 +208,7 @@ public class PBumpService extends Service{
 			data_recieved = bt_reader.readLine();
 			Log.d("DATA","Received: " + data_recieved);
 		}catch(Exception e){
-			
+			Log.d("DATA","Could not receive data");
 		}
 	}
 
