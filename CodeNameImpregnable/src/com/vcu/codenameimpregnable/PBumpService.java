@@ -156,7 +156,7 @@ public class PBumpService extends Service{
 		// TODO Auto-generated method stub
 		SendGrid sendgrid = new SendGrid("mirabile", "xavier131");
 		Log.d("TAG",phoneNumber);
-		if (phoneNumber != null){
+		if (phoneNumber == null){
 			
 			sendgrid.addTo(addTo);
 			sendgrid.setFrom(setFrom);
