@@ -5,6 +5,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.LinkedList;
 import java.util.UUID;
 
 import com.github.sendgrid.SendGrid;
@@ -76,6 +77,49 @@ public class MainActivity extends Activity {
 				trigger();
 			}
 		});
+		
+		startTriggerCheck();
+	}
+	
+	public void startTriggerCheck(){
+		new Thread(){
+			public void run(){
+				LinkedList<Double> x_list = new LinkedList<Double>();
+				while(true){
+					//check
+					boolean meets_condition = false;
+					
+					double x = 0,y = 0,z = 0;
+					
+					//TODO READ DATA HERE
+					
+					double this_x = x;
+					x_list.add(this_x);
+					if(x_list.size() >= 10)
+						x_list.remove(0);
+					double av_tot = 0;
+					for(int i = 0; i < x_list.size()-1; i++){
+						av_tot += x_list.get(i);
+					}
+
+					double recent = x_list.get(x_list.size()-1);
+					av_tot /= x_list.get(x_list.size()-1);
+					
+					meets_condition = (Math.abs(av_tot) > 10) && (Math.abs(recent) < 1);
+					
+					
+					if(meets_condition && last_time_sent <= System.currentTimeMillis() - 500){
+						trigger();
+					}
+					
+					try{
+						Thread.sleep(100);
+					}catch(Exception e){
+						
+					}
+				}
+			}
+		}.start();
 	}
 	
 	public void sendTrigger(){
