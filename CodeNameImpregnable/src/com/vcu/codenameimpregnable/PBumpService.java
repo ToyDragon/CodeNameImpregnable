@@ -2,10 +2,15 @@ package com.vcu.codenameimpregnable;
 
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.os.IBinder;
+import android.widget.TextView;
 
 public class PBumpService extends Service{
+	
+	public static final String bump_prefix = "PBump-";
+	public BroadcastReceiver bt_listener;
 
 	boolean started = false;
 	BluetoothAdapter bt_adapter;
@@ -50,7 +55,14 @@ public class PBumpService extends Service{
 	}
 
 	private void lookAtDevices() {
-		
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				
+			}
+			
+		});
 		//do this in another thread
 
 		// check for trigger
