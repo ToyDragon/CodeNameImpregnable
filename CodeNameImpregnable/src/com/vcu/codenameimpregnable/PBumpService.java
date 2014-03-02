@@ -81,27 +81,24 @@ public class PBumpService extends Service{
 			@Override
 			public void run() 
 			{
+				// check for trigger
+				if(isTriggerConditionMet()){
+					//send trigger data
+					sendTriggerData();
+
+					//listen for trigger data
+					listenForTriggerData();
+					//continued in listenForTriggerData
+
+						//send all data
+
+						//receive data
 				
+						//email/sms
+				}
 			}
 			
-		});
-		//do this in another thread
-
-		// check for trigger
-		if(isTriggerConditionMet()){
-			//send trigger data
-			sendTriggerData();
-
-			//listen for trigger data
-			listenForTriggerData();
-			//continued in listenForTriggerData
-
-				//send all data
-
-				//receive data
-		
-				//email/sms
-		}
+		}).start();
 	}
 
 	private void listenForTriggerData() {
