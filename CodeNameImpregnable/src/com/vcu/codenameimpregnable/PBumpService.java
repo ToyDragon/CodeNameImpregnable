@@ -19,13 +19,10 @@ public class PBumpService extends Service{
 	
 	@Override
 	public void onStart(Intent intent, int startId) {
-	   // handleCommand(intent);
 	}
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-	    // We want this service to continue running until it is explicitly
-	    // stopped, so return sticky.
 		
 		if(!started){
 			started = true;
