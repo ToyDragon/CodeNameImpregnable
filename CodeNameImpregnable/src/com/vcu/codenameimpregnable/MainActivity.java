@@ -52,7 +52,7 @@ public class MainActivity extends Activity {
 	private String phoneNumber;
 	
 	LinkedList<Double> x_list = new LinkedList<Double>();
-	int records = 4;
+	int records = 15;
 	
 	PebbleDataReceiver pebble_receiver = new PebbleDataReceiver(pebble_uuid){
 		@Override 
@@ -68,6 +68,8 @@ public class MainActivity extends Activity {
 			x_list.add(this_x);
 			if(x_list.size() >= records)
 				x_list.remove(0);
+			
+			Log.d("X DIRECTION",""+x);
 			double av_tot = 0;
 			for(int i = 0; i < x_list.size()-1; i++){
 				av_tot += x_list.get(i);
