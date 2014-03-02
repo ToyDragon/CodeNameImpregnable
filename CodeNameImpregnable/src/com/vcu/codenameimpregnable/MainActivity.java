@@ -65,7 +65,7 @@ public class MainActivity extends Activity {
 		});
 		button_trigger.setOnClickListener(new OnClickListener(){
 			public void onClick(View v) {
-				//TODO Trigger something
+				sendData("TEST!");
 			}
 		});
 	}
@@ -75,7 +75,7 @@ public class MainActivity extends Activity {
 			public void onReceive(Context context, Intent intent) {
 		        String action = intent.getAction();
 		        // When discovery finds a device
-		        if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+		        if (BluetoothDevice.ACTION_FOUND.equals(action) && writer==null) {
 		            // Get the BluetoothDevice object from the Intent
 		            BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 		            Log.i("Log", "Viewing device "+device.getName() + " : " + device.getBondState());
@@ -83,7 +83,6 @@ public class MainActivity extends Activity {
 		            if(device.getName().indexOf(bump_prefix) == 0){
 		                Log.i("Log", "Accepted!");
 		                try {
-		                    Log.i("Log", "service method is called ");
 		                    Method method = BluetoothDevice.class.getMethod("createBond", new Class[0]);
 		                    method.invoke(device);
 		                    try{
@@ -99,7 +98,7 @@ public class MainActivity extends Activity {
 	        					reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 	        					
 	        					connectionEstablished();
-	        		            Log.i("Log", "Connected succesfully!");
+	        		            Log.i("Log", "Connected succesfully!"+(writer!=null));
                         	}catch(Exception e){
                         		Log.e("ERROR","COULD NOT BE A CLIENT NOOOOOOO!!!!!!");
                         		e.printStackTrace();
@@ -112,6 +111,7 @@ public class MainActivity extends Activity {
 			        }
 		        }
 		        if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action) && writer == null){
+		            Log.i("Log", "Listening again...");
 		        	bt_adapter.startDiscovery();
 		        }
 		    }
@@ -142,11 +142,12 @@ public class MainActivity extends Activity {
 					
 					BluetoothServerSocket server_socket = bt_adapter.listenUsingRfcommWithServiceRecord(bt_adapter.getName(), uuid);
 					BluetoothSocket socket = server_socket.accept();
-
+					socket.connect();
 					writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 					reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 					
 					connectionEstablished();
+			        Log.i("Log", "Connection established");
 					
 				}catch(Exception e){
 					Log.e("ERROR","COULD NOT BE A SERVER NOOOOOO!!!!");
@@ -165,6 +166,7 @@ public class MainActivity extends Activity {
 				while(true){
 					String line;
 					try {
+			            Log.i("Log", "Waiting for data...");
 						line = reader.readLine();
 						handleData(line);
 					} catch (IOException e) {
@@ -184,7 +186,9 @@ public class MainActivity extends Activity {
 			writer.write(data);
 			writer.newLine();
 			writer.flush();
+            Log.i("Log", "Sent data!");
 		}catch(Exception e){
+			e.printStackTrace();
 			Log.e("ERROR","COULD NOT SEND DAYA NOOONONNONO!!!!");
 		}
 	}
