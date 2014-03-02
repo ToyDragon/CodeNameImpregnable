@@ -22,7 +22,8 @@ public class PBumpService extends Service{
 	
 	public static final String bump_prefix = "PBump-";
 	public BroadcastReceiver bt_listener;
-
+	
+	
 	boolean started = false;
 	BluetoothAdapter bt_adapter;
 	String data_to_send;
@@ -35,6 +36,7 @@ public class PBumpService extends Service{
 	
 	@Override
 	public void onStart(Intent intent, int startId) {
+		
 	}
 
 	@Override
@@ -66,10 +68,12 @@ public class PBumpService extends Service{
 	}
 
 	private void lookAtDevices() {
-		new Thread(new Runnable() {
+		new Thread(new Runnable() 
+		{
 
 			@Override
-			public void run() {
+			public void run() 
+			{
 				
 			}
 			
