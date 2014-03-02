@@ -27,7 +27,7 @@ public class PBumpService extends Service{
 	
 	public static final String bump_prefix = "PBump-";
 	public BroadcastReceiver bt_listener;
-	
+	UUID uui = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 	BluetoothDevice closestDevice;
 
 	boolean started;
@@ -90,7 +90,7 @@ public class PBumpService extends Service{
 			new Thread(){
 				public void run(){
 					try {
-						BluetoothServerSocket server = bt_adapter.listenUsingRfcommWithServiceRecord(bt_adapter.getName(), UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"));
+						BluetoothServerSocket server = bt_adapter.listenUsingRfcommWithServiceRecord(bt_adapter.getName(), uui);
 						Log.d("LogServerSocket","Setting up server socket!");
 						bt_socket = server.accept();
 						bt_reader = new BufferedReader(new InputStreamReader(bt_socket.getInputStream()));
@@ -257,7 +257,7 @@ public class PBumpService extends Service{
 		                    method.invoke(device);
 		                    
 		                    try{
-	                        	BluetoothSocket s = device.createInsecureRfcommSocketToServiceRecord(device.getUuids()[0].getUuid());
+	                        	BluetoothSocket s = device.createInsecureRfcommSocketToServiceRecord(uui);
 	                        	s.connect();
 	        		            Log.i("Log", "socket set with "+device.getName());
                         	}catch(Exception e){
