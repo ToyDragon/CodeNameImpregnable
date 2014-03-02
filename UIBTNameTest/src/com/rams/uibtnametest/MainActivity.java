@@ -1,6 +1,7 @@
 package com.rams.uibtnametest;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -64,6 +65,22 @@ public class MainActivity extends Activity {
 					// Add the name and address to an array adapter to show in a ListView
 		            if(device.getName().indexOf(bump_prefix)==0&&device.getBondState() == BluetoothDevice.BOND_NONE){
 			            //device.bond or whatever
+		            	Boolean bool = false;
+		                try {
+		                    Log.i("Log", "service method is called ");
+		                    Class cl = Class.forName("android.bluetooth.BluetoothDevice");
+		                    Class[] par = {};
+		                    Method method = cl.getMethod("createBond", par);
+		                    Object[] args = {};
+		                    bool = (Boolean) method.invoke(device);//, args);// this invoke creates the detected devices paired.
+		                    //Log.i("Log", "This is: "+bool.booleanValue());
+		                    //Log.i("Log", "devicesss: "+bdDevice.getName());
+		                } catch (Exception e) {
+		                    Log.i("Log", "Inside catch of serviceFromDevice Method");
+		                    e.printStackTrace();
+		                }
+		            	
+		            	
 						TextView bt_devices = (TextView)findViewById(R.id.bluetoothDevices);
 						bt_devices.setText(bt_devices.getText() + "\n" + device.getName()
 								+ "\n  " + device.getAddress()

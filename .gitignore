@@ -2,7 +2,10 @@
 
 
 # Package Files #
-
+*.snap
+.metadata
+*.dex
+*.apk
 *.jar
 
 *.war
