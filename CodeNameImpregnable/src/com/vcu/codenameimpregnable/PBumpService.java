@@ -1,11 +1,8 @@
 package com.vcu.codenameimpregnable;
-//import com.example.pbump.R;
 import com.github.sendgrid.SendGrid;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.lang.reflect.Method;
 
 import android.app.Service;
@@ -20,7 +17,6 @@ import android.os.IBinder;
 import android.os.AsyncTask;
 import android.telephony.SmsManager;
 import android.util.Log;
-import android.widget.TextView;
 
 public class PBumpService extends Service{
 	
