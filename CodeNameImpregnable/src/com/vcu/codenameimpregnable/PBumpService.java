@@ -47,17 +47,6 @@ public class PBumpService extends Service{
 	public void onCreate() {
 
 		Log.d("TEST","start");
-	}
-	
-	public void onDestory(){
-		if(bt_listener!=null)
-			unregisterReceiver(bt_listener);
-	}
-
-	@Override
-	public int onStartCommand(Intent intent, int flags, int startId) {
-
-		Log.d("TEST","starccccc "+started);
 		if(!started){
 			started = true;
 			
@@ -83,7 +72,19 @@ public class PBumpService extends Service{
 						//email/sms
 			
 		}
+	}
+	
+	public void onDestory(){
+		if(bt_listener!=null)
+			unregisterReceiver(bt_listener);
+	}
+
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+
+		Log.d("TEST","starccccc "+started);
 	    return START_STICKY;
+
 	}
 	
 	public void makeDeviceDiscoverable(){
