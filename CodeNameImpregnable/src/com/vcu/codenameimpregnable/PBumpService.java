@@ -3,13 +3,16 @@ import com.github.sendgrid.SendGrid;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Method;
+import java.util.UUID;
 
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -62,6 +65,9 @@ public class PBumpService extends Service{
 			//start listening
 			startListening();
 			
+			//set up server
+			setUpServer();
+			
 			//look at closest device
 			lookAtDevices();
 			//continued in lookAtDevices
@@ -77,6 +83,27 @@ public class PBumpService extends Service{
 				
 						//email/sms
 		}
+	}
+	
+	public void setUpServer(){
+		try {
+			new Thread(){
+				public void run(){
+					try {
+						BluetoothServerSocket server = bt_adapter.listenUsingRfcommWithServiceRecord(bt_adapter.getName(), UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"));
+						Log.d("LogServerSocket","Setting up server socket!");
+						bt_socket = server.accept();
+						bt_reader = new BufferedReader(new InputStreamReader(bt_socket.getInputStream()));
+	                    bt_writer = new BufferedWriter(new OutputStreamWriter(bt_socket.getOutputStream()));
+					} catch (IOException e) {
+						Log.e("LogServerSocket","Could not set up server socket!");
+					}
+				}
+			}.start();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    	
 	}
 	
 	public void makeDeviceDiscoverable(){
@@ -228,10 +255,8 @@ public class PBumpService extends Service{
 		                    method.invoke(device);
 		                    
 		                    try{
-	                        	bt_socket = device.createInsecureRfcommSocketToServiceRecord(device.getUuids()[0].getUuid());
-	                        	bt_socket.connect();
-	                        	bt_reader = new BufferedReader(new InputStreamReader(bt_socket.getInputStream()));
-	                        	bt_writer = new BufferedWriter(new OutputStreamWriter(bt_socket.getOutputStream()));
+	                        	BluetoothSocket s = device.createInsecureRfcommSocketToServiceRecord(device.getUuids()[0].getUuid());
+	                        	s.connect();
 	        		            Log.i("Log", "socket set with "+device.getName());
                         	}catch(Exception e){
                         		Log.e("ERROR",""+e);
