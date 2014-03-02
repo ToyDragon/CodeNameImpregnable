@@ -155,7 +155,7 @@ public class PBumpService extends Service{
 	private void sendEmailSms() {
 		// TODO Auto-generated method stub
 		SendGrid sendgrid = new SendGrid("mirabile", "xavier131");
-		
+		Log.d("TAG",phoneNumber);
 		if (phoneNumber != null){
 			
 			sendgrid.addTo(addTo);
@@ -168,7 +168,7 @@ public class PBumpService extends Service{
 		}else{
 			
 			phoneNumber = "+1"+phoneNumber;
-			
+			Log.d("TAG",phoneNumber);
 			SmsManager smsManager = SmsManager.getDefault();
 		
 			smsManager.sendTextMessage(phoneNumber, null, setText, null, null);
