@@ -31,7 +31,7 @@ public class MainActivity extends Activity {
 		return true;
 	}
 	
-	public void onDestroy(){
+	public void onStop(){
 		stopService(pbump_service_intent);
 		
 		BluetoothAdapter bt_adapter = BluetoothAdapter.getDefaultAdapter();
@@ -47,10 +47,7 @@ public class MainActivity extends Activity {
 				}
 			}
 		}
-		//if(bt_adapter.getName().indexOf("PBump-")==0){
-		//	bt_adapter.setName(bt_adapter.getName().substring("PBump-".length()));
-		//}
 		
-		super.onDestroy();
+		super.onStop();
 	}
 }
