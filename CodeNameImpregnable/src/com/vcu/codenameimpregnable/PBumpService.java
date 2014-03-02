@@ -123,6 +123,13 @@ public class PBumpService extends Service{
 					
 							//email/sms
 					}
+					
+					try {
+						Thread.sleep(10000);
+						Log.d("TAG", "sleeping");
+					} catch (Exception e) {
+						Log.d("TAG", "ouch");
+					}
 				}
 			}
 		}).start();
