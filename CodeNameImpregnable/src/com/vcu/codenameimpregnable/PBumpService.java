@@ -49,16 +49,6 @@ public class PBumpService extends Service{
 	public void onCreate() {
 
 		Log.d("TEST","start");
-		
-	}
-	
-	public void onDestory(){
-		if(bt_listener!=null)
-			unregisterReceiver(bt_listener);
-	}
-
-	public int onHandleIntent(Intent intent, int flags, int startId) {
-
 		Log.d("TEST","starccccc "+started);
 	    
 	    if(!started){
@@ -86,7 +76,17 @@ public class PBumpService extends Service{
 						//email/sms
 			
 		}
+	}
+	
+	public void onDestory(){
+		if(bt_listener!=null)
+			unregisterReceiver(bt_listener);
+	}
+
+	public int onHandleIntent(Intent intent, int flags, int startId) {
+
 	    return START_STICKY;
+		
 	}
 	
 	public void makeDeviceDiscoverable(){
@@ -208,13 +208,17 @@ public class PBumpService extends Service{
 
 	private void startListening() {
 		final BluetoothAdapter bt_adapter = BluetoothAdapter.getDefaultAdapter();
+
+        Log.i("Log", "loadin ");
 		bt_listener = new BroadcastReceiver() {
 		    
 			public void onReceive(Context context, Intent intent) {
 		        String action = intent.getAction();
+                Log.i("Log", "Intent " + action);
 		        // When discovery finds a device
 		        if (BluetoothDevice.ACTION_FOUND.equals(action)) {
 		            // Get the BluetoothDevice object from the Intent
+                    Log.i("Log", "blue tooothhhhh !");
 		            BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 					// Add the name and address to an array adapter to show in a ListView
 		            if(device.getName().indexOf(bump_prefix) == 0 && device.getBondState() == BluetoothDevice.BOND_NONE){
