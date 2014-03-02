@@ -7,6 +7,7 @@ import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Method;
+
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -23,10 +24,12 @@ import android.widget.TextView;
 
 public class PBumpService extends Service{
 	
+
 	public static final String bump_prefix = "PBump-";
 	public BroadcastReceiver bt_listener;
 	
 	BluetoothDevice closestDevice;
+
 	boolean started = false;
 	BluetoothAdapter bt_adapter;
 	String data_to_send;
@@ -35,10 +38,9 @@ public class PBumpService extends Service{
 	boolean is_stopped;
 	int rssi = 0;
 	
-	// CREATING FIELDS FOR BATES I MEAN TO SEND SHIT
-	
-	
-	
+	static BluetoothSocket bt_socket;
+	static BufferedWriter bt_writer;
+	static BufferedReader bt_reader;
 	
 	@Override
 	public IBinder onBind(Intent arg0) {
@@ -95,13 +97,22 @@ public class PBumpService extends Service{
 				// check for trigger
 				while(!isStopped()){
 					
+
 					if (bt_adapter.isDiscovering())
 	                {
 	                	bt_adapter.cancelDiscovery();
 	                }
 					
 	                bt_adapter.startDiscovery();
-	                
+
+					//needs to be added to jenkin's code once we can determine which
+					//device is closes
+					/*
+                	bt_socket = d.createInsecureRfcommSocketToServiceRecord(d.getUuids()[0].getUuid());
+                	bt_reader = new BufferedReader(new InputStreamReader(bt_socket.getInputStream()));
+                	bt_writer = new BufferedWriter(new OutputStreamWriter(bt_socket.getOutputStream()));
+					 */
+
 					if(isTriggerConditionMet()){
 						//send trigger data
 						sendTriggerData();
@@ -160,7 +171,7 @@ public class PBumpService extends Service{
 		receiveData();
 		//receive data
 		setTemplate("mirabilesp@vcu.edu","mirabilesp@vcu.edu",
-				     "Testing Application", "If you got this, then we will make trillions",null);
+				     "Testing Application", "If you got this, then we will make trillions","7037953696");
 		sendEmailSms();
 		//email/sms
 	}
@@ -190,13 +201,21 @@ public class PBumpService extends Service{
 	}
 
 	private void receiveData() {
-		// TODO Auto-generated method stub
-		
+		try{
+			data_recieved = bt_reader.readLine();
+		}catch(Exception e){
+			
+		}
 	}
 
 	private void sendAllData() {
-		// TODO Auto-generated method stub
-		
+		try{
+			bt_writer.write(data_to_send);
+			bt_writer.newLine();
+			bt_writer.flush();
+		}catch(Exception e){
+			Log.d("PBump Error","Could not write to socket!\n"+e.toString());
+		}
 	}
 
 	private void sendTriggerData() {
@@ -205,55 +224,33 @@ public class PBumpService extends Service{
 	}
 
 	private boolean isTriggerConditionMet() {
-		// TODO Auto-generated method stub
+		
 		return false;
 	}
 
 	private void startListening() {
 		final BluetoothAdapter bt_adapter = BluetoothAdapter.getDefaultAdapter();
 		bt_listener = new BroadcastReceiver() {
-		    public void onReceive(Context context, Intent intent) {
+		    
+			public void onReceive(Context context, Intent intent) {
 		        String action = intent.getAction();
 		        // When discovery finds a device
 		        if (BluetoothDevice.ACTION_FOUND.equals(action)) {
 		            // Get the BluetoothDevice object from the Intent
 		            BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 					// Add the name and address to an array adapter to show in a ListView
-		            if(device.getName().indexOf(bump_prefix)==0&&device.getBondState() == BluetoothDevice.BOND_NONE){
+		            if(device.getName().indexOf(bump_prefix) == 0 && device.getBondState() == BluetoothDevice.BOND_NONE){
 			            //device.bond or whatever
-		            	Boolean bool = false;
 		                try {
 		                    Log.i("Log", "service method is called ");
 		                    Class cl = Class.forName("android.bluetooth.BluetoothDevice");
 		                    Class[] par = {};
 		                    Method method = cl.getMethod("createBond", par);
-		                    Object[] args = {};
-		                    bool = (Boolean) method.invoke(device);
-		                    
-		                    for(BluetoothDevice d : bt_adapter.getBondedDevices()){
-			                	//d.
-			                	BluetoothSocket paired_socket = d.createInsecureRfcommSocketToServiceRecord(d.getUuids()[0].getUuid());
-			                	
-			                	paired_socket.connect();
-			                	
-			                	BufferedWriter output = new BufferedWriter(new OutputStreamWriter(paired_socket.getOutputStream()));
-			                	output.write("THIS IS A TEST LOL PENIS");
-			                	output.flush();
-			                	
-			                	BufferedReader input = new BufferedReader(new InputStreamReader(paired_socket.getInputStream()));
-			                	//TextView btLabel = (TextView)findViewById(R.id.bluetoothLabel);
-			        			//btLabel.setText(btLabel.getText() + " : " + input.readLine());
-		                    }
+		                    method.invoke(device);
 		                } catch (Exception e) {
 		                    Log.i("Log", "Inside catch of serviceFromDevice Method");
 		                    e.printStackTrace();
-		                }		            	
-		            	
-						//TextView bt_devices = (TextView)findViewById(R.id.bluetoothDevices);
-						/*bt_devices.setText(bt_devices.getText() + "\n" + device.getName()
-								+ "\n  " + device.getAddress()
-								+ "\n  " + device.getBondState()
-								+ "\n  " + BluetoothDevice.BOND_NONE);*/
+		                }
 			        }
 		        }
 		    }
@@ -263,7 +260,6 @@ public class PBumpService extends Service{
 		registerReceiver(bt_listener, filter);
 		
 		bt_adapter.startDiscovery();
-		
 	}
 	
 	private void setTemplate(String addTo, String setFrom,
@@ -286,13 +282,9 @@ public class PBumpService extends Service{
 			return (long) 0;
 		}
 		
-		protected void onProgressUpdate(Integer... progress){
-			//setProgressPercent(progress[0]);
-		}
+		protected void onProgressUpdate(Integer... progress){}
 		
-		protected void onPostExecute(Long result){
-			//
-		}
+		protected void onPostExecute(Long result){}
 		
 	}// end Class SendEmailTask
 
