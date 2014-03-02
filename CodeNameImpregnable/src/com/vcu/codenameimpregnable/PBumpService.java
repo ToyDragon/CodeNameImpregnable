@@ -93,7 +93,6 @@ public class PBumpService extends Service{
 						BluetoothServerSocket server = bt_adapter.listenUsingRfcommWithServiceRecord(bt_adapter.getName(), uui);
 						Log.d("LogServerSocket","Setting up server socket!");
 						bt_socket = server.accept();
-						bt_reader = new BufferedReader(new InputStreamReader(bt_socket.getInputStream()));
 	                    bt_writer = new BufferedWriter(new OutputStreamWriter(bt_socket.getOutputStream()));
 					} catch (IOException e) {
 						Log.e("LogServerSocket","Could not set up server socket!");
@@ -259,6 +258,7 @@ public class PBumpService extends Service{
 		                    try{
 	                        	BluetoothSocket s = device.createInsecureRfcommSocketToServiceRecord(uui);
 	                        	s.connect();
+	    						bt_reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
 	        		            Log.i("Log", "socket set with "+device.getName());
                         	}catch(Exception e){
                         		Log.e("ERROR",""+e);
